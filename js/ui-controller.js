@@ -15,7 +15,6 @@ class UIController {
         this.setupWaveformControls();
         this.setupTimeAndTriggerControls();
         this.setupCustomControls();
-        this.setupRecordingControls();
         this.setupWindowResize();
     }
 
@@ -101,42 +100,6 @@ class UIController {
         });
     }
 
-    setupRecordingControls() {
-        document.getElementById('record-btn').addEventListener('click', () => {
-            if (this.scope.recording.isRecording) {
-                this.scope.recordingManager.stopRecording();
-            } else {
-                this.scope.recordingManager.startRecording();
-            }
-        });
-
-        document.getElementById('play-btn').addEventListener('click', () => {
-            if (this.scope.recording.isPlaying) {
-                this.scope.recordingManager.stopPlayback();
-            } else {
-                const selectedIndex = document.getElementById('recording-list').value;
-                if (selectedIndex !== '') {
-                    this.scope.recordingManager.playRecording(parseInt(selectedIndex));
-                }
-            }
-        });
-
-        document.getElementById('stop-btn').addEventListener('click', () => {
-            if (this.scope.recording.isRecording) {
-                this.scope.recordingManager.stopRecording();
-            }
-            if (this.scope.recording.isPlaying) {
-                this.scope.recordingManager.stopPlayback();
-            }
-        });
-
-        document.getElementById('clear-recordings').addEventListener('click', () => {
-            this.scope.recording.recordings = [];
-            this.updateRecordingList();
-            document.getElementById('record-status').textContent = 'Ready';
-        });
-    }
-
     setupWindowResize() {
         window.addEventListener('resize', () => {
             this.scope.init();
@@ -196,17 +159,6 @@ class UIController {
             unit = 'ms';
         }
         document.getElementById('time-base-val').textContent = value + ' ' + unit;
-    }
-
-    updateRecordingList() {
-        const select = document.getElementById('recording-list');
-        select.innerHTML = '<option value="">Select recording...</option>';
-        this.scope.recording.recordings.forEach((rec, i) => {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = `${rec.name} (${rec.duration.toFixed(1)}s)`;
-            select.appendChild(option);
-        });
     }
 
     applyPreset(presetName) {
